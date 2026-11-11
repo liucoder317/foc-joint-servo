@@ -32,7 +32,9 @@
 
 /* Private define ------------------------------------------------------------*/
 /* USER CODE BEGIN PD */
-
+/* LED1 每 500 ms 翻转一次，闪烁周期 1 s。HAL_Delay 按 SysTick 计时，
+ * SysTick 来自 SYSCLK，所以周期偏离 1 s 说明 HSE 不是 24 MHz。 */
+#define LED_TOGGLE_INTERVAL_MS 500U
 /* USER CODE END PD */
 
 /* Private macro -------------------------------------------------------------*/
@@ -97,6 +99,8 @@ int main(void)
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
+    HAL_GPIO_TogglePin(LED1_GPIO_Port, LED1_Pin);
+    HAL_Delay(LED_TOGGLE_INTERVAL_MS);
   }
   /* USER CODE END 3 */
 }
@@ -159,6 +163,17 @@ void Error_Handler(void)
   /* USER CODE BEGIN Error_Handler_Debug */
   /* User can add his own implementation to report the HAL error return state */
   __disable_irq();
+  /* LED3 常亮表示初始化失败，例如 HSE 起振失败导致 HAL_RCC_OscConfig 出错。
+   * 时钟配置失败时 MX_GPIO_Init 还没执行，所以这里重新配置 LED3 引脚。
+   * HAL_GPIO_Init 不依赖中断和 SysTick，关中断后调用也可以。 */
+  GPIO_InitTypeDef led3 = {0};
+  __HAL_RCC_GPIOC_CLK_ENABLE();
+  led3.Pin = LED3_Pin;
+  led3.Mode = GPIO_MODE_OUTPUT_PP;
+  led3.Pull = GPIO_NOPULL;
+  led3.Speed = GPIO_SPEED_FREQ_LOW;
+  HAL_GPIO_Init(LED3_GPIO_Port, &led3);
+  HAL_GPIO_WritePin(LED3_GPIO_Port, LED3_Pin, GPIO_PIN_RESET);
   while (1)
   {
   }
