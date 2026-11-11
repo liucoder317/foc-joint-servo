@@ -1,0 +1,31 @@
+# Keil 编译输出。CubeMX 生成的 MDK 工程把输出放在 MDK-ARM/<工程名>/ 下
+firmware/MDK-ARM/firmware/
+*.o
+*.d
+*.crf
+*.axf
+*.hex
+*.bin
+*.map
+*.lst
+*.dep
+*.lnp
+*.htm
+*.iex
+*.__i
+*._ia
+
+# Keil 自动生成或个人使用的文件
+*.uvguix.*
+firmware/MDK-ARM/DebugConfig/
+EventRecorderStub.scvd
+JLinkLog.txt
+JLinkSettings.ini
+
+# VS Code Keil Assistant 生成的文件，含本机绝对路径
+**/.vscode/c_cpp_properties.json
+**/.vscode/*.log
+**/.vscode/*.lock
+
+# Keil 命令行编译日志
+firmware/MDK-ARM/build.log
